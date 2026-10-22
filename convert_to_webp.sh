@@ -25,6 +25,7 @@ export WEBP_QUALITY=$Q
 TOTAL=$#
 
 # --- Parallel convert: NPROC fail serentak, 1 fail = 1 core (P-core sahaja, max 8) ---
+# Asal dipindah ke folder "original", .webp kekal di lokasi asal
 printf '%s\0' "$@" | xargs -0 -n1 -P "$NPROC" zsh -c '
     f="$1"
     dir="${f%/*}"
@@ -34,7 +35,9 @@ printf '%s\0' "$@" | xargs -0 -n1 -P "$NPROC" zsh -c '
     ext_lower=$(echo "$ext" | tr "[:upper:]" "[:lower:]")
     case "$ext_lower" in
         jpg|jpeg|png|tiff|bmp)
-            cwebp -q "$WEBP_QUALITY" "$f" -o "$dir/$basename.webp"
+            cwebp -q "$WEBP_QUALITY" "$f" -o "$dir/$basename.webp" \
+                && mkdir -p "$dir/original" \
+                && mv "$f" "$dir/original/$filename"
             ;;
     esac
 ' _

@@ -1,7 +1,7 @@
 #!/bin/bash
 # image-to-webp (macOS) installer
 # Usage (one-liner):
-#   curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/main/mac/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/main/install.sh | bash
 set -euo pipefail
 
 REPO="RafieRosliputra/image-to-webp"
@@ -31,7 +31,7 @@ echo "==> Downloading workflow..."
 curl -fsSL "https://codeload.github.com/${REPO}/tar.gz/refs/heads/main" -o "$TMPDIR_WORK/repo.tar.gz"
 
 tar -xzf "$TMPDIR_WORK/repo.tar.gz" -C "$TMPDIR_WORK"
-SRC_DIR=$(find "$TMPDIR_WORK" -maxdepth 4 -type d -name "$WORKFLOW" | head -1)
+SRC_DIR=$(find "$TMPDIR_WORK" -maxdepth 3 -type d -name "$WORKFLOW" | head -1)
 
 if [ -z "$SRC_DIR" ]; then
     echo "ERROR: Could not find '$WORKFLOW' in the downloaded archive."
