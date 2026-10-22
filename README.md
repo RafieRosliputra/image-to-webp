@@ -1,34 +1,38 @@
-# mac-finder-webp-convert
+<div align="center">
 
-A macOS **Finder Quick Action** that converts images to **WebP** with selectable quality and parallel processing (multi-core).
+# 🖼️ mac-finder-webp-convert
 
-Right-click any image in Finder → **Quick Actions → Convert to WebP**, pick quality + core mode, done.
+**Convert images to WebP, right from Finder — with parallel multi-core speed.**
 
-## Features
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![macOS](https://img.shields.io/badge/macOS-11%2B-000000?logo=apple)](https://www.apple.com/macos/)
+[![Shell](https://img.shields.io/badge/Made%20with-Bash%20%26%20AppleScript-4EAA25?logo=gnu-bash)](convert_to_webp.sh)
+[![Automator](https://img.shields.io/badge/Quick%20Action-Automator-999999)](https://support.apple.com/guide/automator/welcome/mac)
+[![GitHub release](https://img.shields.io/github/v/release/RafieRosliputra/mac-finder-webp-convert)](https://github.com/RafieRosliputra/mac-finder-webp-convert/releases)
 
-- **Quality presets** — 40%, 50%, 65% (lossy WebP via `cwebp`).
-- **Parallel processing** — converts many files at once, one file per CPU core.
-  - **Low** = 2 cores · **Mid** = 4 cores · **High** = 8 cores
-  - Only *performance* cores are used (max 8), efficiency cores stay idle.
-  - ~4.7× faster than sequential conversion (benchmarked on Apple M1 Pro).
-- **Single dialog** — quality + mode combined in one dropdown.
-  - `Return` = use highlighted default (`50% - High (8 core)`)
-  - `Escape` = cancel
-- **Filename-safe** — null-delimited `xargs`, so spaces in filenames are fine.
-- **Completion notification** — macOS banner when done.
+A **Finder Quick Action** that turns any image into **WebP** with selectable quality and multi-core parallel encoding.
 
-## Requirements
+</div>
 
-- **macOS** (tested on Apple Silicon; works on Intel too — adjust core counts if needed)
-- **`cwebp`** (from Google's `webp` package) installed via Homebrew:
+---
 
-```bash
-brew install webp
-```
+## ✨ Features
 
-- **Automator** (built into macOS) — used to install the workflow.
+| | |
+|---|---|
+| 🎚️ **Quality presets** | 40% · 50% · 65% lossy WebP via `cwebp` |
+| ⚡ **Parallel encoding** | One file per core — Low (2) · Mid (4) · High (8) |
+| 🧠 **Performance cores only** | Max 8 P-cores; efficiency cores stay idle |
+| 🖥️ **Single dialog** | Quality + mode combined in one dropdown |
+| ⌨️ **Keyboard-friendly** | `Return` = default · `Escape` = cancel |
+| 🛡️ **Filename-safe** | Null-delimited `xargs` — spaces in names are fine |
+| 🔔 **Completion banner** | Native macOS notification when done |
 
-## Install
+<p align="center">
+  <img src="dialog.png" alt="Convert to WebP dialog" width="480"/>
+</p>
+
+## 🚀 Install
 
 ### One-liner (fastest)
 
@@ -40,81 +44,100 @@ curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/mac-finder-webp-con
 
 It auto-installs `cwebp` (via Homebrew if missing), downloads the workflow, and registers it — nothing else needed.
 
+> **Prefer to review first?**
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/mac-finder-webp-convert/main/install.sh -o install.sh && cat install.sh
+> bash install.sh
+> ```
 
-### Option A — Quick (double-click)
+### Manual
 
-1. Download / clone this repo.
-2. In Finder, double-click **`Convert to WebP.workflow`**.
-3. macOS asks *"You are opening an Automator workflow for the first time"* → click **Install** (or **Open**, then in Automator go to **File → Save As…** and save it as a Quick Action).
-4. Done. The action appears under **Finder → right-click → Quick Actions**.
+**Option A — double-click.** Download the repo, double-click **`Convert to WebP.workflow`**, then click **Install** (or open in Automator and *File → Save As…* as a Quick Action).
 
-> If "Install" isn't offered, in Automator click **File → Convert To… → Quick Action**, then save.
-
-### Option B — Manual (copy into Services folder)
-
-Copy the workflow bundle into the user's Services directory:
-
+**Option B — copy into Services.** 
 ```bash
 cp -R "Convert to WebP.workflow" ~/Library/Services/
-```
-
-Then register it so macOS picks it up immediately:
-
-```bash
 /System/Library/CoreServices/pbs -flush
 ```
 
-> The `~/Library/Services/` folder is where macOS stores all Automator Quick Actions. You can open it in Finder with `⌘⇧G` and pasting `~/Library/Services/`.
+> `~/Library/Services/` is where macOS stores Quick Actions. Open it in Finder with `⌘⇧G` → `~/Library/Services/`.
 
 ### Verify
 
 1. Right-click any `.jpg` / `.png` / `.tiff` / `.bmp` in Finder.
-2. Hover **Quick Actions** → **Convert to WebP** should be listed.
-3. Click it → dialog appears → press **Return** for default (50%, 8 cores).
+2. Hover **Quick Actions** → **Convert to WebP**.
+3. Click it → press **Return** for default (50%, 8 cores).
 
-## Usage
+## 🧰 Requirements
+
+- **macOS 11+** (tested on Apple Silicon; Intel works too — adjust core counts)
+- **`cwebp`** — installed automatically by the one-liner, or manually:
+  ```bash
+  brew install webp
+  ```
+
+## 📖 Usage
 
 | Input | Output |
 |-------|--------|
-| `photo.jpg` | `photo.webp` (same name, same folder) |
+| `photo.jpg` | `photo.webp` |
 | `image 01.png` | `image 01.webp` |
 
-Supported input formats: `jpg`, `jpeg`, `png`, `tiff`, `bmp`. Other file types are ignored.
+Supported input formats: `jpg`, `jpeg`, `png`, `tiff`, `bmp`. Others are ignored.
 
-## How it works
+**Quality × mode matrix:**
 
-The Quick Action is an **Automator "Run Shell Script"** workflow. The core logic:
+| | Low (2 core) | Mid (4 core) | High (8 core) |
+|---|---|---|---|
+| **40%** | ✅ | ✅ | ✅ |
+| **50%** | ✅ | ✅ | ✅ *(default)* |
+| **65%** | ✅ | ✅ | ✅ |
 
-1. Shows a native `choose from list` dialog (AppleScript) with 9 quality×mode combinations.
-2. Maps the choice to `cwebp -q <quality>` and a concurrency count `NPROC`.
-3. Feeds selected files (null-delimited) into `xargs -P $NPROC`, running `NPROC` parallel `cwebp` processes — one per file, one per core.
-4. Shows a completion notification.
+## ⚙️ How it works
 
-See [`convert_to_webp.sh`](convert_to_webp.sh) for the full script.
+1. An **Automator "Run Shell Script"** Quick Action receives selected files.
+2. A native AppleScript `choose from list` dialog offers 9 quality×mode combos.
+3. The choice maps to `cwebp -q <quality>` + concurrency `NPROC`.
+4. Files are piped (null-delimited) into `xargs -P $NPROC`, running `NPROC` parallel `cwebp` processes — one file per core.
+5. A completion notification reports the result.
+
+Full script: [`convert_to_webp.sh`](convert_to_webp.sh)
 
 ### Why not GPU?
 
-WebP (libwebp) encoding is **CPU-only**. There is no Metal GPU encoder for WebP on Apple Silicon (the only GPU WebP encoder, NVIDIA's `nvImageCodec`, is CUDA/NVIDIA-only). Parallel CPU processing is the fastest available approach — see benchmark below.
+WebP (`libwebp`) encoding is **CPU-only** — there is no Metal GPU encoder for WebP on Apple Silicon. (The only GPU WebP encoder, NVIDIA's `nvImageCodec`, is CUDA/NVIDIA-only.) Parallel CPU is the fastest available path.
 
-## Benchmark
+## 📊 Benchmark
 
-10 images (6000×4000), Apple M1 Pro (8 P-cores + 2 E-cores):
+10 images (6000×4000) · Apple M1 Pro (8 P-cores + 2 E-cores):
 
-| Mode | Time |
-|------|------|
-| Sequential (1 core) | 35.98 s |
-| Parallel (8 cores) | **7.68 s** |
+| Mode | Time | Speedup |
+|------|------|---------|
+| Sequential (1 core) | 35.98 s | 1.0× |
+| Parallel (8 cores) | **7.68 s** | **4.7×** |
 
-~4.7× speedup.
+## 🔧 Customizing
 
-## Customizing
+Edit the `.workflow` in Automator, or edit `convert_to_webp.sh`:
 
-Edit the workflow in **Automator** (double-click the `.workflow`), or edit `convert_to_webp.sh` directly:
+- **Quality presets** — edit the `choose from list` line + `case` mapping.
+- **Core counts** — edit `NPROC=` values in the `case` block (keep ≤ your P-core count).
+- **Default selection** — edit `default items {"50% - High (8 core)"}`.
 
-- **Change quality presets** — edit the list in the `choose from list` line and the `case` mapping.
-- **Change core counts** — edit the `NPROC=` values in the `case` block. Set max ≤ your number of performance cores to avoid using efficiency cores.
-- **Change default selection** — edit `default items {"50% - High (8 core)"}`.
+## ❓ FAQ
 
-## License
+**Does it overwrite my original files?**
+No. It creates a new `.webp` next to the original; the source is untouched.
 
-MIT
+**What if a `.webp` with the same name already exists?**
+It is overwritten.
+
+**Why only up to 8 cores on my 10-core Mac?**
+Your Mac has 8 *performance* cores + 2 *efficiency* cores. Capping at 8 keeps all work on performance cores for maximum speed.
+
+**Can it use the GPU?**
+No — WebP has no Metal GPU encoder. See [Why not GPU](#why-not-gpu).
+
+## 📄 License
+
+[MIT](LICENSE) © [Rafie Rosliputra](https://github.com/RafieRosliputra)

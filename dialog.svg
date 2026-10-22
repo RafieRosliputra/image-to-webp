@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440">
+  <defs>
+    <linearGradient id="titlebar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8e8e8"/>
+      <stop offset="1" stop-color="#d6d6d6"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- window shadow -->
+  <rect x="30" y="40" width="580" height="360" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+
+  <!-- title bar -->
+  <path d="M30 52 A12 12 0 0 1 42 40 H598 A12 12 0 0 1 610 52 V78 H30 Z" fill="url(#titlebar)"/>
+
+  <!-- traffic lights -->
+  <circle cx="52" cy="59" r="7" fill="#ff5f57"/>
+  <circle cx="74" cy="59" r="7" fill="#febc2e"/>
+  <circle cx="96" cy="59" r="7" fill="#28c840"/>
+
+  <!-- title -->
+  <text x="610" y="59" text-anchor="end" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="13" fill="#444" font-weight="600">Automator</text>
+
+  <!-- prompt text -->
+  <text x="55" y="118" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="15" fill="#222" font-weight="600">Pilih kualiti &amp; mode:</text>
+
+  <!-- list background -->
+  <rect x="55" y="138" width="530" height="216" rx="7" fill="#ffffff" stroke="#c8c8c8" stroke-width="1.5"/>
+
+  <!-- list items -->
+  <text x="70" y="166" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">40% - Low (2 core)</text>
+  <text x="70" y="190" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">40% - Mid (4 core)</text>
+  <text x="70" y="214" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">40% - High (8 core)</text>
+  <text x="70" y="238" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">50% - Low (2 core)</text>
+  <text x="70" y="262" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">50% - Mid (4 core)</text>
+
+  <!-- highlighted selected row -->
+  <rect x="57" y="272" width="526" height="24" rx="5" fill="#0a60ff"/>
+  <text x="70" y="290" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#ffffff" font-weight="500">50% - High (8 core)</text>
+
+  <text x="70" y="314" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">65% - Low (2 core)</text>
+  <text x="70" y="338" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">65% - Mid (4 core)</text>
+
+  <!-- buttons -->
+  <rect x="385" y="372" width="92" height="28" rx="7" fill="#ffffff" stroke="#c0c0c0" stroke-width="1.5"/>
+  <text x="431" y="391" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#333">Cancel</text>
+
+  <rect x="487" y="372" width="98" height="28" rx="7" fill="#0a60ff"/>
+  <text x="536" y="391" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="14" fill="#ffffff" font-weight="500">OK</text>
+
+  <!-- footer hint -->
+  <text x="55" y="432" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="11" fill="#999">Return = pilih · Escape = batal</text>
+</svg>
