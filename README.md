@@ -30,6 +30,17 @@ brew install webp
 
 ## Install
 
+### One-liner (fastest)
+
+Paste this single line into **Terminal** and press Enter:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/mac-finder-webp-convert/main/install.sh | bash
+```
+
+It auto-installs `cwebp` (via Homebrew if missing), downloads the workflow, and registers it — nothing else needed.
+
+
 ### Option A — Quick (double-click)
 
 1. Download / clone this repo.
