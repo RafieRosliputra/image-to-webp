@@ -1,14 +1,14 @@
 #!/bin/bash
-# mac-finder-webp-convert installer
+# image-to-webp (macOS) installer
 # Usage (one-liner):
-#   curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/mac-finder-webp-convert/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/main/mac/install.sh | bash
 set -euo pipefail
 
-REPO="RafieRosliputra/mac-finder-webp-convert"
+REPO="RafieRosliputra/image-to-webp"
 WORKFLOW="Convert to WebP.workflow"
 SERVICES="$HOME/Library/Services"
 
-echo "==> mac-finder-webp-convert installer"
+echo "==> image-to-webp (macOS) installer"
 
 # 1. Check cwebp
 if ! command -v cwebp >/dev/null 2>&1; then
@@ -31,7 +31,7 @@ echo "==> Downloading workflow..."
 curl -fsSL "https://codeload.github.com/${REPO}/tar.gz/refs/heads/main" -o "$TMPDIR_WORK/repo.tar.gz"
 
 tar -xzf "$TMPDIR_WORK/repo.tar.gz" -C "$TMPDIR_WORK"
-SRC_DIR=$(find "$TMPDIR_WORK" -maxdepth 2 -type d -name "$WORKFLOW" | head -1)
+SRC_DIR=$(find "$TMPDIR_WORK" -maxdepth 4 -type d -name "$WORKFLOW" | head -1)
 
 if [ -z "$SRC_DIR" ]; then
     echo "ERROR: Could not find '$WORKFLOW' in the downloaded archive."
