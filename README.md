@@ -1,64 +1,78 @@
 <div align="center">
 
-# 🖼️ image-to-webp
+# 🪟 image-to-webp (Windows)
 
-**Convert images to WebP from the right-click menu — macOS *and* Windows, with parallel multi-core speed.**
+**Convert images to WebP from the right-click "Send to" menu — with parallel multi-core speed.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![macOS](https://img.shields.io/badge/macOS-11%2B-000000?logo=apple)](mac/)
-[![Windows](https://img.shields.io/badge/Windows-10%2F11-0078D6?logo=windows)](windows/)
+[![Windows](https://img.shields.io/badge/Windows-10%2F11-0078D6?logo=windows)](https://www.microsoft.com/windows/)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?logo=powershell)](convert-to-webp.ps1)
 [![GitHub release](https://img.shields.io/github/v/release/RafieRosliputra/image-to-webp)](https://github.com/RafieRosliputra/image-to-webp/releases)
+
+A **Send to** entry that turns any image into **WebP** with selectable quality and multi-core parallel encoding.
 
 </div>
 
-A right-click converter that turns images into **WebP** with selectable quality (40/50/65%) and multi-core parallel encoding (2/4/8 cores).
-
-| Platform | Menu | Folder |
-|----------|------|--------|
-| 🍎 **macOS** | Finder → Quick Actions | [`mac/`](mac/) |
-| 🪟 **Windows** | Explorer → Send to | [`windows/`](windows/) |
-
 ---
 
-## ✨ Features (both platforms)
+## ✨ Features
 
-- 🎚️ **Quality presets** — 40% · 50% · 65% lossy WebP via `cwebp`
-- ⚡ **Parallel encoding** — one file per core: Low (2) · Mid (4) · High (8)
-- 🖥️ **Single dialog** — quality + mode combined
-- ⌨️ **Keyboard-friendly** — `Enter` = default · `Esc` = cancel
-- 🛡️ **Filename-safe** — spaces in filenames are fine
-- 🔔 **Completion notification**
-- 📦 **One-line install** on both platforms
+| | |
+|---|---|
+| 🎚️ **Quality presets** | 40% · 50% · 65% lossy WebP via `cwebp` |
+| ⚡ **Parallel encoding** | One file per core — Low (2) · Mid (4) · High (8) |
+| 🖥️ **Single dialog** | Quality + mode combined in one list |
+| ⌨️ **Keyboard-friendly** | `Enter` = default · `Esc` = cancel |
+| 🛡️ **Filename-safe** | Handles spaces in filenames |
+| 🔔 **Completion toast** | Native Windows notification when done |
+| 📦 **One-line install** | PowerShell `irm ... | iex` |
 
----
+## 🚀 Install
 
-## 🍎 macOS
+### One-liner (fastest)
 
-### Install (one-liner)
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/main/mac/install.sh | bash
-```
-
-Then: right-click an image in Finder → **Quick Actions → Convert to WebP**.
-
-> Full macOS docs, screenshot, and benchmark → [`mac/README.md`](mac/README.md)
-
-## 🪟 Windows
-
-### Install (one-liner, in PowerShell)
+Open **PowerShell** and run:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/main/windows/install.ps1 | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/windows/install.ps1 | iex"
 ```
 
-Then: right-click an image in Explorer → **Send to → Convert to WebP**.
+This:
+1. Downloads `cwebp.exe` (official Google libwebp binary) into `%LOCALAPPDATA%\image-to-webp\`.
+2. Downloads `convert-to-webp.ps1` into the same folder.
+3. Registers a **`Convert to WebP.cmd`** in `%APPDATA%\Microsoft\Windows\SendTo\`.
 
-> Full Windows docs → [`windows/README.md`](windows/README.md)
+> **Prefer to review first?**
+> ```powershell
+> irm https://raw.githubusercontent.com/RafieRosliputra/image-to-webp/windows/install.ps1 -OutFile install.ps1
+> notepad install.ps1
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1
+> ```
 
----
+### Verify
 
-## 📖 Quality × mode matrix
+1. Right-click any `.jpg` / `.png` / `.tiff` / `.bmp` in Explorer.
+2. Hover **Send to** → **Convert to WebP**.
+3. Click it → press **Enter** for default (50%, 8 cores).
+
+> **Tip:** On Windows 11, the full "Send to" list is hidden behind **"Show more options"** (or `Shift` + right-click) in the new context menu.
+
+## 🧰 Requirements
+
+- **Windows 10 / 11** (x64)
+- **Windows PowerShell 5.1+** (built in — no install needed)
+- **`cwebp.exe`** — downloaded automatically by the installer (no manual step)
+
+## 📖 Usage
+
+| Input | Output |
+|-------|--------|
+| `photo.jpg` | `photo.webp` |
+| `image 01.png` | `image 01.webp` |
+
+Supported input formats: `jpg`, `jpeg`, `png`, `tiff`, `bmp`. Others are ignored.
+
+**Quality × mode matrix:**
 
 | | Low (2 core) | Mid (4 core) | High (8 core) |
 |---|---|---|---|
@@ -68,19 +82,39 @@ Then: right-click an image in Explorer → **Send to → Convert to WebP**.
 
 ## ⚙️ How it works
 
-1. The context-menu item receives the selected files.
-2. A native dialog offers 9 quality×mode combinations.
-3. The choice maps to `cwebp -q <quality>` + concurrency `N`.
-4. Files are encoded in parallel — one `cwebp` process per file, up to `N` at a time.
+1. The **`Convert to WebP.cmd`** in `SendTo` receives the selected file paths (`%*`).
+2. It invokes [`convert-to-webp.ps1`](convert-to-webp.ps1) with those paths.
+3. A Windows Forms dialog lists 9 quality×mode combinations.
+4. The choice maps to `cwebp -q <quality>` + concurrency `N`.
+5. Files are encoded in parallel using `Start-Process` — one `cwebp` per file, up to `N` at a time.
+6. A toast notification reports the result.
 
-**Why not GPU?** WebP (`libwebp`) is **CPU-only** — no Metal (macOS) or CUDA (Windows) encoder exists. Parallel CPU is the fastest available path.
+> **Note on cores:** unlike macOS, Windows does not expose a simple "performance vs efficiency core" API. On hybrid CPUs the OS scheduler handles core assignment automatically. The `N` value simply limits concurrent processes.
 
-## 📊 Benchmark (Apple M1 Pro, 10×6000×4000)
+## 🔧 Customizing
 
-| Mode | Time | Speedup |
-|------|------|---------|
-| Sequential (1 core) | 35.98 s | 1.0× |
-| Parallel (8 cores) | **7.68 s** | **4.7×** |
+Edit `convert-to-webp.ps1`:
+
+- **Quality presets & core counts** — edit the `$Choices` array (each entry has `Q` and `N`).
+- **Default selection** — change `$DefaultIndex`.
+- **Input formats** — edit `$ValidExt`.
+
+## ❓ FAQ
+
+**Does it overwrite my original files?**
+No. It creates a new `.webp` next to the original.
+
+**What if a `.webp` with the same name already exists?**
+It is overwritten.
+
+**Where is it installed?**
+Scripts go to `%LOCALAPPDATA%\image-to-webp\`; the SendTo shortcut goes to `%APPDATA%\Microsoft\Windows\SendTo\`.
+
+**How do I uninstall?**
+```powershell
+Remove-Item "$env:APPDATA\Microsoft\Windows\SendTo\Convert to WebP.cmd"
+Remove-Item -Recurse "$env:LOCALAPPDATA\image-to-webp"
+```
 
 ## 📄 License
 

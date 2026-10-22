@@ -15,20 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Package macOS workflow as zip
-        run: |
-          cd mac
-          zip -r "../Convert to WebP.workflow.zip" "Convert to WebP.workflow"
-
       - name: Package Windows scripts as zip
         run: |
-          cd windows
-          zip -r "../windows-scripts.zip" .
+          zip -r "windows-scripts.zip" convert-to-webp.ps1 install.ps1
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            Convert to WebP.workflow.zip
             windows-scripts.zip
           generate_release_notes: true
